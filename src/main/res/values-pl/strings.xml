@@ -704,4 +704,5 @@ Conversations będzie wciąż ograniczał transfer danych, kiedy tylko to jest m
   <string name="copy_to_clipboard">Skopiuj do schowka</string>
   <string name="message_copied_to_clipboard">Wiadomość skopiowana do schowka</string>
   <string name="message">Wiadomość</string>
+    <string name="otp">OTP</string>
 </resources>

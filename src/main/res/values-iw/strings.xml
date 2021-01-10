@@ -402,4 +402,5 @@
   <string name="no_storage_permission">‏Conversations זקוקה לגישה לאחסון חיצוני</string>
   <string name="sync_with_contacts">סנכרן עם אנשי קשר</string>
   <string name="sync_with_contacts_long">‏Conversations מבקשת להתאים את רשימת XMPP שלך עם אנשי הקשר שלך כדי להציג את השמות המלאים שלהם כולל אווטארים.\n\nConversations רק תקרא את אנשי הקשר שלך ותתאים אותם באופן מקומי מבלי להעלות אותם לשרת שלך.\n\nכעת אתה תתבקש להעניק הרשאה כדי לגשת להתקן שלך.</string>
+    <string name="otp">OTP</string>
 </resources>

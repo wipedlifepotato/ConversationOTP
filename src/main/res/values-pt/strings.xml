@@ -485,4 +485,5 @@
   <string name="no_application_to_share_uri">Não foi encontrada nenhuma aplicação para partilhar o URI</string>
   <string name="share_uri_with">Partilhar URI com...</string>
   <string name="create_account">Criar conta</string>
+    <string name="otp">OTP</string>
 </resources>

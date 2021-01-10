@@ -708,4 +708,5 @@ sau chiar pierderea mesajelor.\nÎn continuare veți fi rugați să dezactivați
   <string name="private_messages_are_disabled">Mesajele private sunt dezactivate</string>
   <string name="huawei_protected_apps">Aplicații protejate</string>
   <string name="huawei_protected_apps_summary">Pentru a continua să primiți notificări, chiar și când ecranul este oprit, trebuie să adăugați Conversations în lista de aplicații protejate.</string>
+    <string name="otp">OTP</string>
 </resources>

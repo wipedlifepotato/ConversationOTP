@@ -702,4 +702,5 @@
   <string name="private_messages_are_disabled">Private Nachrichten sind deaktiviert</string>
   <string name="huawei_protected_apps">Geschützte Apps</string>
   <string name="huawei_protected_apps_summary">Um weiterhin Benachrichtigungen zu erhalten, auch wenn der Bildschirm ausgeschaltet ist, musst du Conversations zur Liste der geschützten Apps hinzufügen.</string>
+    <string name="otp">OTP</string>
 </resources>

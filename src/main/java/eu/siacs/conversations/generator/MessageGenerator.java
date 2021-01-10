@@ -1,8 +1,12 @@
 package eu.siacs.conversations.generator;
 
+import android.util.Log;
+
 import net.java.otr4j.OtrException;
 import net.java.otr4j.session.Session;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +26,8 @@ import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.chatstate.ChatState;
 import eu.siacs.conversations.xmpp.jid.Jid;
 import eu.siacs.conversations.xmpp.stanzas.MessagePacket;
+import eu.siacs.conversations.crypto.OtpService;
+
 
 public class MessageGenerator extends AbstractGenerator {
 	public static final String OTR_FALLBACK_MESSAGE = "I would like to start a private (OTR encrypted) conversation but your client doesn’t seem to support that";
@@ -134,7 +140,42 @@ public class MessageGenerator extends AbstractGenerator {
 			return null;
 		}
 	}
+	public MessagePacket generateOtpChat(Message message, int offset) {
+		OtpService otp = null;
+		try {
+			otp = new OtpService(message.getCounterpart());//message.getConversation().getOtrSession();
+		} catch (IOException exception) {
+			//
+		}catch(Throwable exc){
+			Log.d("ERROR_OTP",exc.toString());
+		}
+		if (otp == null || otp.getmKeyFile() == null) {
+			return null;
+		}
+		MessagePacket packet = preparePacket(message);
+		addMessageHints(packet);
+		try {
+			String content;
+			if (message.hasFileOnRemoteHost()) {
+				content = message.getFileParams().url.toString();
+			} else {
+				content = message.getBody();
+			}
+			otp.setOffset(offset);
+			String encryptedMsg= otp.doCryptDecrypt(content,false);
+			packet.setBody(Message.OTP_PROTOCOL+"|"+offset+"|"+encryptedMsg);
+			//packet.setBody(encryptedMsg);
 
+			packet.addChild("encryption","urn:xmpp:eme:0")
+					.setAttribute("namespace","urn:xmpp:otp:0");
+//			.setAttribute("offset","urn:xmpp:"+offset+":0");
+			return packet;
+		}  catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException exception) {
+			return null;
+		}
+	}
 	public MessagePacket generateChat(Message message) {
 		MessagePacket packet = preparePacket(message);
 		String content;

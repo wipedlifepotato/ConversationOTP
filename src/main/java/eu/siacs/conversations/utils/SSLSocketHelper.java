@@ -18,7 +18,7 @@ public class SSLSocketHelper {
 		final String[] supportProtocols;
 		final Collection<String> supportedProtocols = new LinkedList<>(
 				Arrays.asList(sslSocket.getSupportedProtocols()));
-		supportedProtocols.remove("SSLv3");
+		//supportedProtocols.remove("SSLv3");
 		supportProtocols = supportedProtocols.toArray(new String[supportedProtocols.size()]);
 
 		sslSocket.setEnabledProtocols(supportProtocols);
@@ -67,7 +67,7 @@ public class SSLSocketHelper {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			return SSLContext.getInstance("TLSv1.2");
 		} else {
-			return SSLContext.getInstance("TLS");
+			return SSLContext.getInstance("TLSv1.2");
 		}
 	}
 }

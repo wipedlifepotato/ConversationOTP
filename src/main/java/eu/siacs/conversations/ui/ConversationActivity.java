@@ -2,6 +2,7 @@ package eu.siacs.conversations.ui;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
@@ -12,6 +13,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,6 +42,7 @@ import net.java.otr4j.session.SessionStatus;
 
 import org.openintents.openpgp.util.OpenPgpApi;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +51,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import de.timroes.android.listview.EnhancedListView;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
+import eu.siacs.conversations.crypto.OtpService;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.crypto.axolotl.FingerprintStatus;
 import eu.siacs.conversations.entities.Account;
@@ -129,11 +133,27 @@ public class ConversationActivity extends XmppActivity
 	private Pair<Integer, Intent> mPostponedActivityResult;
 	private boolean mUnprocessedNewIntent = false;
 	public Uri mPendingEditorContent = null;
-
+    public String tmpPath;
 	public Conversation getSelectedConversation() {
 		return this.mSelectedConversation;
 	}
+	public String getPath(Uri uri) {
 
+		String path = null;
+		String[] projection = { MediaStore.Files.FileColumns.DATA };
+		Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+
+		if(cursor == null){
+			path = uri.getPath();
+		}
+		else{
+			cursor.moveToFirst();
+			int column_index = cursor.getColumnIndexOrThrow(projection[0]);
+			path = cursor.getString(column_index);
+			cursor.close();
+		}
+		return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
+	}
 	public void setSelectedConversation(Conversation conversation) {
 		this.mSelectedConversation = conversation;
 	}
@@ -888,6 +908,31 @@ public class ConversationActivity extends XmppActivity
 		popup.show();
 	}
 
+	public static final String OtpKeyFilePaths = "/sdcard/PixArtOTP/";
+	public String getFilePathOtp(Jid userJid) {
+		//OtpKeyFilePaths//
+
+
+		File tmp = new File(OtpKeyFilePaths+"/"+userJid.getLocalpart()+"."+userJid.getDomainpart()+".txt" );
+		if( ! tmp.isFile() ){
+			String keyFilePath=getFilePathOtp();
+			tmp.getParentFile().mkdirs();
+				try {
+					OtpService otp = new OtpService();
+					File tmp1 = new File(keyFilePath);
+					otp.copyFile(tmp1, tmp);
+					otp = null;
+					return tmp.getAbsolutePath();
+				}catch(Exception e){
+					Log.d("ERROR?", e.toString());
+					return "";
+				}
+			}else{
+			tmpPath=null;
+			return tmp.getAbsolutePath();
+	    }
+	}
+
 	protected void selectEncryptionDialog(final Conversation conversation) {
 		View menuItemView = findViewById(R.id.action_security);
 		if (menuItemView == null) {
@@ -908,6 +953,11 @@ public class ConversationActivity extends XmppActivity
 							break;
 						case R.id.encryption_choice_otr:
 							conversation.setNextEncryption(Message.ENCRYPTION_OTR);
+							item.setChecked(true);
+							break;
+						case R.id.encryption_choice_otp:
+							conversation.setNextEncryption(Message.ENCRYPTION_OTP);
+							getFilePathOtp(conversation.getAccount().getJid());
 							item.setChecked(true);
 							break;
 						case R.id.encryption_choice_pgp:
@@ -1419,6 +1469,14 @@ public class ConversationActivity extends XmppActivity
 		}
 		return uris;
 	}
+	final int PICKFILE_OTP_RESULT_CODE = 6565;
+	public String getFilePathOtp(){
+		Intent chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+		chooseFile.setType("*/*");
+		chooseFile = Intent.createChooser(chooseFile, "Choose a file which otp-key");
+		startActivityForResult(chooseFile, PICKFILE_OTP_RESULT_CODE);
+		return tmpPath;
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
@@ -1515,6 +1573,10 @@ public class ConversationActivity extends XmppActivity
 					this.mPostponedActivityResult = new Pair<>(requestCode, data);
 				}
 
+			}else if (requestCode == PICKFILE_OTP_RESULT_CODE) {
+				Log.d("GetFile","File picked");
+				Uri content_describer = data.getData();
+				tmpPath = new String(getPath(content_describer));
 			}
 		} else {
 			mPendingImageUris.clear();

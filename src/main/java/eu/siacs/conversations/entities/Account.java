@@ -3,8 +3,10 @@ package eu.siacs.conversations.entities;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.SystemClock;
+import android.util.Log;
 import android.util.Pair;
 
+import eu.siacs.conversations.crypto.OtpService;
 import eu.siacs.conversations.crypto.PgpDecryptionService;
 
 import net.java.otr4j.crypto.OtrCryptoEngineImpl;
@@ -13,6 +15,8 @@ import net.java.otr4j.crypto.OtrCryptoException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.PublicKey;
 import java.security.interfaces.DSAPublicKey;
 import java.util.ArrayList;
@@ -60,7 +64,7 @@ public class Account extends AbstractEntity {
 	public static final int OPTION_REQUIRES_ACCESS_MODE_CHANGE = 5;
 	public static final int OPTION_LOGGED_IN_SUCCESSFULLY = 6;
 	public final HashSet<Pair<String, String>> inProgressDiscoFetches = new HashSet<>();
-
+	public static final String OtpKeyFilePaths = "/sdcard/PixArtOTP/";
 	public boolean httpUploadAvailable(long filesize) {
 		return xmppConnection != null && xmppConnection.getFeatures().httpUpload(filesize);
 	}

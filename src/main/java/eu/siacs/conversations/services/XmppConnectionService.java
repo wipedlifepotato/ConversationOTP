@@ -44,6 +44,7 @@ import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -140,6 +141,7 @@ import eu.siacs.conversations.xmpp.stanzas.IqPacket;
 import eu.siacs.conversations.xmpp.stanzas.MessagePacket;
 import eu.siacs.conversations.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
+import eu.siacs.conversations.crypto.OtpService;
 
 public class XmppConnectionService extends Service {
 
@@ -966,7 +968,7 @@ public class XmppConnectionService extends Service {
 		}
 	}
 
-	@SuppressLint("TrulyRandom")
+	@SuppressLint({"TrulyRandom", "InvalidWakeLockTag"})
 	@Override
 	public void onCreate() {
 		ExceptionHelper.init(getApplicationContext());
@@ -1274,6 +1276,18 @@ public class XmppConnectionService extends Service {
 						Log.d(Config.LOGTAG, account.getJid().toBareJid() + " OTR session with " + message.getContact() + " is in wrong state: " + otrSession.getSessionStatus().toString());
 					}
 					break;
+				case Message.ENCRYPTION_OTP:
+
+						if (message.needsUploading()) {
+							mJingleConnectionManager.createNewConnection(message);
+						} else {
+							int offset = message.getConversation().getMessageOtpOffset();
+							packet = mMessageGenerator.generateOtpChat(message,offset);
+							//message.setOtpOffset(offset+message.getBody().length());
+							message.setOtpOffset(offset);
+						}
+
+					break;
 				case Message.ENCRYPTION_AXOLOTL:
 					message.setFingerprint(account.getAxolotlService().getOwnFingerprint());
 					if (message.needsUploading()) {
@@ -1333,6 +1347,9 @@ public class XmppConnectionService extends Service {
 					break;
 				case Message.ENCRYPTION_AXOLOTL:
 					message.setFingerprint(account.getAxolotlService().getOwnFingerprint());
+					break;
+				case Message.ENCRYPTION_OTP:
+					markMessage(message, Message.STATUS_SEND_FAILED);
 					break;
 			}
 		}
@@ -2274,6 +2291,7 @@ public class XmppConnectionService extends Service {
 						x.addChild("history").setAttribute("maxchars", "0");
 					} else {
 						// Fallback to muc history
+
 						x.addChild("history").setAttribute("since", PresenceGenerator.getTimestamp(conversation.getLastMessageTransmitted().getTimestamp()));
 					}
 					sendPresencePacket(account, packet);

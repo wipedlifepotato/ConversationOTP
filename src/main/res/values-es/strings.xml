@@ -702,4 +702,5 @@
   <string name="private_messages_are_disabled">Los mensajes privados están deshabilitados</string>
   <string name="huawei_protected_apps">Aplicaciones protegidas</string>
   <string name="huawei_protected_apps_summary">Para seguir recibiendo notificaciones, incluso cuando la pantalla está apagada, necesitas añadir Conversations a la lista de aplicaciones protegidas.</string>
+    <string name="otp">OTP</string>
 </resources>

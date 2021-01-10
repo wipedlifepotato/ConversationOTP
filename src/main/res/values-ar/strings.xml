@@ -609,4 +609,5 @@
   <string name="copy_to_clipboard">النسخ إلى الحافظة</string>
   <string name="message_copied_to_clipboard">تم نسخ الرسالة إلى الحافظة</string>
   <string name="message">رسالة</string>
+    <string name="otp">OTP</string>
 </resources>

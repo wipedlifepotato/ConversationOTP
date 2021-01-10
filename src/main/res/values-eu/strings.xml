@@ -702,4 +702,5 @@
   <string name="private_messages_are_disabled">Mezu pribatuak ezgaituta daude</string>
   <string name="huawei_protected_apps">Babestutako aplikazioak</string>
   <string name="huawei_protected_apps_summary">Jakinarazpenak jasotzen jarraitu nahi naduzu, baita pantaila itzalita dagoenean ere, Conversations babestutako aplikazioen zerrendan gehitu behar duzu.</string>
+    <string name="otp">OTP</string>
 </resources>

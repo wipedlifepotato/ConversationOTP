@@ -645,4 +645,5 @@
   <string name="network_is_unreachable">Мережа недоступна.</string>
   <string name="certificate_does_not_contain_jid">Сертифікат не містить ідентифікатора Jabber ID</string>
   <string name="server_info_partial">частково</string>
+    <string name="otp">OTP</string>
 </resources>

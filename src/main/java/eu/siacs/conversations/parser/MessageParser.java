@@ -20,6 +20,8 @@ import java.util.UUID;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.OtrService;
+import eu.siacs.conversations.crypto.OtpService;
+
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.crypto.axolotl.XmppAxolotlMessage;
 import eu.siacs.conversations.entities.Account;
@@ -138,6 +140,37 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 			conversation.resetOtrSession();
 			return null;
 		}
+	}
+	private Message parseOtpChat(String body, Jid from, String id, Conversation conversation) {
+		String presence;
+		Log.d("OTPDecrypt","Parse body: "+body);
+		if (from.isBareJid()) {
+			presence = "";
+		} else {
+			presence = from.getResourcepart();
+		}
+		if (body.matches("^"+Message.OTP_PROTOCOL+"\\?\\|[0-9].*\\|.*")) {
+			Log.d("ERROR_OTP","understable OTP");
+			return new Message(conversation, "Understable OTP message: "+presence+":"+from.getLocalpart()+body, Message.ENCRYPTION_NONE, Message.STATUS_RECEIVED);
+		}
+
+		Message finishedMessage = null;
+		try{
+			OtpService otpservice = new OtpService(  from.getLocalpart()+"."+from.getDomainpart()  );
+			String tmp[] = body.split("\\|");
+			int offset=Integer.parseInt(tmp[1]);
+			otpservice.setOffset( offset );
+			body = otpservice.doCryptDecrypt(tmp[2],true);
+			body=body.substring(0,body.length()-2);
+			finishedMessage = new Message(conversation, body, Message.ENCRYPTION_OTP, Message.STATUS_RECEIVED);
+			finishedMessage.setOtpOffset(offset+body.length());
+		}catch(Exception e){
+			finishedMessage = new Message(conversation, "understable OTP(maybe not exists FileKey:" + body +" ;"+e.toString(), Message.ENCRYPTION_NONE, Message.STATUS_RECEIVED);
+			Log.d("ERROR_OTPDecrypt",e.toString()+" "+body);
+			return finishedMessage;
+		}
+
+		return finishedMessage;
 	}
 
 	private static boolean clientMightSendHtml(Account account, Jid from) {
@@ -515,7 +548,17 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 				if (CryptoHelper.isPgpEncryptedUrl(oobUrl)) {
 					message.setEncryption(Message.ENCRYPTION_DECRYPTED);
 				}
-			} else {
+			} else 	if (body != null && body.startsWith(Message.OTP_PROTOCOL) && Config.supportOTP()) {
+				if (!isForwarded && !isTypeGroupChat && isProperlyAddressed && !conversationMultiMode) {
+					message = parseOtpChat(body, from, remoteMsgId, conversation);
+					if (message == null) {
+						return;
+					}
+				} else {
+					Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": ignoring OTR message from " + from + " isForwarded=" + Boolean.toString(isForwarded) + ", isProperlyAddressed=" + Boolean.valueOf(isProperlyAddressed));
+					message = new Message(conversation, body, Message.ENCRYPTION_NONE, status);
+				}
+			}else {
 				message = new Message(conversation, body, Message.ENCRYPTION_NONE, status);
 			}
 

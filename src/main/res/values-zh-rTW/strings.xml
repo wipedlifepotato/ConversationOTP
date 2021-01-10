@@ -622,4 +622,5 @@
   <string name="online_right_now">剛剛上線了</string>
   <string name="retry_decryption">再試解密ㄧ次</string>
   <string name="session_failure">通訊對話錯誤</string>
+    <string name="otp">OTP</string>
 </resources>

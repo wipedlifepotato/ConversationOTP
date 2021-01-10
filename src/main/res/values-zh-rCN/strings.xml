@@ -698,4 +698,5 @@
   <string name="message_copied_to_clipboard">消息已被复制</string>
   <string name="message">消息</string>
   <string name="private_messages_are_disabled">禁止私信</string>
+    <string name="otp">OTP</string>
 </resources>

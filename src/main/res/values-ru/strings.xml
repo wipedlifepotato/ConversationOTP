@@ -701,4 +701,5 @@
   <string name="copy_to_clipboard">Скопировать в буфер обмена</string>
   <string name="message_copied_to_clipboard">Сообщение скопировано в буфер обмена</string>
   <string name="message">Сообщение</string>
+    <string name="otp">OTP</string>
 </resources>

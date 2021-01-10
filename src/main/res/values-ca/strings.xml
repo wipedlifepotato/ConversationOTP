@@ -706,4 +706,5 @@ d\'altres proveïdors donant-los la vostra ID Jabber completa.</string>
   <string name="copy_to_clipboard">Copiar al portapapers</string>
   <string name="message_copied_to_clipboard">Missatge copiat al portapapers</string>
   <string name="message">Missatge</string>
+    <string name="otp">OTP</string>
 </resources>

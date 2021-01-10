@@ -702,4 +702,5 @@
   <string name="private_messages_are_disabled">A privát üzenetek le vannak tiltva</string>
   <string name="huawei_protected_apps">Védett alkalmazások</string>
   <string name="huawei_protected_apps_summary">Ha értesítést szeretne kapni, még akkor is, ha a képernyő ki van kapcsolva, hozzá kell adnia a Conversations-t a védett alkalmazások listájához.</string>
+    <string name="otp">OTP</string>
 </resources>

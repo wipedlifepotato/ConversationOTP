@@ -702,4 +702,5 @@
   <string name="private_messages_are_disabled">Privéberichten zijn uitgeschakeld</string>
   <string name="huawei_protected_apps">Beschermde apps</string>
   <string name="huawei_protected_apps_summary">Om meldingen te blijven ontvangen, zelfs wanneer het scherm uit staat, moet je Conversations toevoegen aan de lijst met beschermde apps.</string>
+    <string name="otp">OTP</string>
 </resources>

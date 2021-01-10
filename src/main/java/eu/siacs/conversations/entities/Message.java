@@ -47,6 +47,7 @@ public class Message extends AbstractEntity {
 	public static final int ENCRYPTION_DECRYPTED = 3;
 	public static final int ENCRYPTION_DECRYPTION_FAILED = 4;
 	public static final int ENCRYPTION_AXOLOTL = 5;
+	public static final int ENCRYPTION_OTP = 6;
 
 	public static final int TYPE_TEXT = 0;
 	public static final int TYPE_IMAGE = 1;
@@ -74,7 +75,7 @@ public class Message extends AbstractEntity {
 	public static final String READ_BY_MARKERS = "readByMarkers";
 	public static final String MARKABLE = "markable";
 	public static final String ME_COMMAND = "/me ";
-
+	public static final String OTP_PROTOCOL="Visidsh_Suslika?";
 
 	public boolean markable = false;
 	protected String conversationUuid;
@@ -100,6 +101,7 @@ public class Message extends AbstractEntity {
 	private String axolotlFingerprint = null;
 	private String errorMessage = null;
 	private Set<ReadByMarker> readByMarkers = new HashSet<>();
+	public int OtpOffset = 0;
 
 	private Boolean isGeoUri = null;
 	private Boolean isEmojisOnly = null;
@@ -223,7 +225,12 @@ public class Message extends AbstractEntity {
 		message.body = body;
 		return message;
 	}
-
+	public int getOtpOffset(){
+		return this.OtpOffset;
+	}
+	public void setOtpOffset(int off){
+		this.OtpOffset=off;
+	}
 	public static Message createLoadMoreMessage(Conversation conversation) {
 		final Message message = new Message(conversation);
 		message.setType(Message.TYPE_STATUS);
