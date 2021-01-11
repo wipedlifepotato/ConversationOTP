@@ -87,7 +87,7 @@ public class OtpService  {
     }
 
     public int getOffset(){
-        return this.offset;
+        return this.offset;//GET OFFSET FROM DB/TMPFILE
     }
     public void setOffset(int offset){
         this.offset=offset;
