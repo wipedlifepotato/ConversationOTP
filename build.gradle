@@ -71,7 +71,7 @@ android {
         versionCode 256
         versionName "1.23.10"
         archivesBaseName += "-$versionName"
-        applicationId "eu.siacs.conversations.legacy"
+        applicationId "eu.siacs.conversations.fork"
     }
 
     dexOptions {

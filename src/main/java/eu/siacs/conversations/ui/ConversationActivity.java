@@ -957,7 +957,7 @@ public class ConversationActivity extends XmppActivity
 							break;
 						case R.id.encryption_choice_otp:
 							conversation.setNextEncryption(Message.ENCRYPTION_OTP);
-							getFilePathOtp(conversation.getAccount().getJid());
+							getFilePathOtp(conversation.getContact().getJid());
 							item.setChecked(true);
 							break;
 						case R.id.encryption_choice_pgp:
@@ -992,6 +992,7 @@ public class ConversationActivity extends XmppActivity
 			popup.inflate(R.menu.encryption_choices);
 			MenuItem otr = popup.getMenu().findItem(R.id.encryption_choice_otr);
 			MenuItem none = popup.getMenu().findItem(R.id.encryption_choice_none);
+			MenuItem otp = popup.getMenu().findItem(R.id.encryption_choice_otp);
 			MenuItem pgp = popup.getMenu().findItem(R.id.encryption_choice_pgp);
 			MenuItem axolotl = popup.getMenu().findItem(R.id.encryption_choice_axolotl);
 			pgp.setVisible(Config.supportOpenPgp());
@@ -1005,6 +1006,9 @@ public class ConversationActivity extends XmppActivity
 				axolotl.setEnabled(false);
 			}
 			switch (conversation.getNextEncryption()) {
+				case Message.ENCRYPTION_OTP:
+					otp.setChecked(true);
+					break;
 				case Message.ENCRYPTION_NONE:
 					none.setChecked(true);
 					break;

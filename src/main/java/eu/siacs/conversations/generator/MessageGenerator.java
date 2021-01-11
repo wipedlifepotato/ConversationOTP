@@ -161,6 +161,7 @@ public class MessageGenerator extends AbstractGenerator {
 			} else {
 				content = message.getBody();
 			}
+			Log.d("OTPEncrypt","Offset: "+offset);
 			otp.setOffset(offset);
 			String encryptedMsg= otp.doCryptDecrypt(content,false);
 			packet.setBody(Message.OTP_PROTOCOL+"|"+offset+"|"+encryptedMsg);
