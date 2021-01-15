@@ -3,6 +3,7 @@ package eu.siacs.conversations.entities;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import net.java.otr4j.OtrException;
 import net.java.otr4j.crypto.OtrCryptoException;
@@ -78,6 +79,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 	protected Account account = null;
 
 	private transient SessionImpl otrSession;
+
 
 	private transient String otrFingerprint = null;
 	private Smp mSmp = new Smp();
@@ -488,6 +490,23 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 			}
 		}
 	}
+	public int getMessageOtpOffset() {
+		int res=0;
+		synchronized (this.messages) {
+			if (this.messages.size() == 0) {
+				return res;
+			} else {
+				//Log.d("OTP_NOTIFY","Search msg with starts of OTP_PROTOCOL");
+				for(int i = 1;i<this.messages.size();i++){
+					Message msg = this.messages.get(this.messages.size() - i);
+					if( msg.encryption == Message.ENCRYPTION_OTP && (msg.status != Message.STATUS_UNSEND
+						&& msg.status != Message.STATUS_SEND_FAILED && msg.status != Message.STATUS_WAITING  && msg.status != Message.STATUS_OFFERED ) ) res+=msg.getBody().length();
+					else if(msg.getOtpOffset() > 0) res+=msg.getOtpOffset();
+				}
+				return res;
+			}
+		}
+	}
 
 	public String getName() {
 		if (getMode() == MODE_MULTI) {
@@ -737,6 +756,8 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 				return Config.supportOmemo() ? selectedEncryption : getDefaultEncryption();
 			case Message.ENCRYPTION_OTR:
 				return Config.supportOtr() ? selectedEncryption : getDefaultEncryption();
+			case Message.ENCRYPTION_OTP:
+				return Config.supportOTP() ? Message.ENCRYPTION_OTP : getDefaultEncryption();
 			case Message.ENCRYPTION_PGP:
 			case Message.ENCRYPTION_DECRYPTED:
 			case Message.ENCRYPTION_DECRYPTION_FAILED:
@@ -757,7 +778,9 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 			return Message.ENCRYPTION_OTR;
 		} else if (Config.supportOpenPgp()) {
 			return Message.ENCRYPTION_PGP;
-		} else {
+		} else if(Config.supportOTP()){
+			return Message.ENCRYPTION_OTP;
+		} else{
 			return Message.ENCRYPTION_NONE;
 		}
 	}

@@ -11,8 +11,9 @@ public final class Config {
 	private static final int OPENPGP = 2;
 	private static final int OTR = 4;
 	private static final int OMEMO = 8;
+	private static final int OTP = 16;
 
-	private static final int ENCRYPTION_MASK = UNENCRYPTED | OPENPGP | OTR | OMEMO;
+	private static final int ENCRYPTION_MASK = UNENCRYPTED | OPENPGP | OTR | OMEMO | OTP;
 
 	public static boolean supportUnencrypted() {
 		return (ENCRYPTION_MASK & UNENCRYPTED) != 0;
@@ -28,6 +29,9 @@ public final class Config {
 
 	public static boolean supportOmemo() {
 		return (ENCRYPTION_MASK & OMEMO) != 0;
+	}
+	public static boolean supportOTP() {
+		return (ENCRYPTION_MASK & OTP) != 0;
 	}
 
 	public static boolean multipleEncryptionChoices() {
@@ -112,40 +116,40 @@ public final class Config {
 	public static final int EXPIRY_INTERVAL = 30 * 60 * 1000; // 30 minutes
 
 	public static final String ENABLED_CIPHERS[] = {
-		"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
-		"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA384",
-		"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA256",
-		"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-		"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
-		"TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+			"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+			"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA384",
+			"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA256",
+			"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+			"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+			"TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
 
-		"TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
-		"TLS_DHE_RSA_WITH_AES_128_GCM_SHA384",
-		"TLS_DHE_RSA_WITH_AES_256_GCM_SHA256",
-		"TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+			"TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+			"TLS_DHE_RSA_WITH_AES_128_GCM_SHA384",
+			"TLS_DHE_RSA_WITH_AES_256_GCM_SHA256",
+			"TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
 
-		"TLS_DHE_RSA_WITH_CAMELLIA_256_SHA",
+			"TLS_DHE_RSA_WITH_CAMELLIA_256_SHA",
 
-		// Fallback.
-		"TLS_RSA_WITH_AES_128_GCM_SHA256",
-		"TLS_RSA_WITH_AES_128_GCM_SHA384",
-		"TLS_RSA_WITH_AES_256_GCM_SHA256",
-		"TLS_RSA_WITH_AES_256_GCM_SHA384",
-		"TLS_RSA_WITH_AES_128_CBC_SHA256",
-		"TLS_RSA_WITH_AES_128_CBC_SHA384",
-		"TLS_RSA_WITH_AES_256_CBC_SHA256",
-		"TLS_RSA_WITH_AES_256_CBC_SHA384",
-		"TLS_RSA_WITH_AES_128_CBC_SHA",
-		"TLS_RSA_WITH_AES_256_CBC_SHA",
+			// Fallback.
+			"TLS_RSA_WITH_AES_128_GCM_SHA256",
+			"TLS_RSA_WITH_AES_128_GCM_SHA384",
+			"TLS_RSA_WITH_AES_256_GCM_SHA256",
+			"TLS_RSA_WITH_AES_256_GCM_SHA384",
+			"TLS_RSA_WITH_AES_128_CBC_SHA256",
+			"TLS_RSA_WITH_AES_128_CBC_SHA384",
+			"TLS_RSA_WITH_AES_256_CBC_SHA256",
+			"TLS_RSA_WITH_AES_256_CBC_SHA384",
+			"TLS_RSA_WITH_AES_128_CBC_SHA",
+			"TLS_RSA_WITH_AES_256_CBC_SHA",
 	};
 
 	public static final String WEAK_CIPHER_PATTERNS[] = {
-		"_NULL_",
-		"_EXPORT_",
-		"_anon_",
-		"_RC4_",
-		"_DES_",
-		"_MD5",
+			"_NULL_",
+			"_EXPORT_",
+			"_anon_",
+			"_RC4_",
+			"_DES_",
+			"_MD5",
 	};
 
 	private Config() {
