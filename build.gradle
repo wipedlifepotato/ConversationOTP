@@ -71,7 +71,7 @@ android {
         versionCode 258
         versionName "1.23.12"
         archivesBaseName += "-$versionName"
-        applicationId "eu.siacs.conversations.legacy"
+        applicationId "eu.siacs.conversations.legacymod"
     }
 
     dexOptions {
